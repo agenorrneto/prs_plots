@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import matplotlib.pyplot as plt
 import os
 import seaborn as sns
 
@@ -34,12 +35,26 @@ def bmi_per_quantile(prs_df):
 
     fig = sns.boxplot(data=prs_df_q20, x="prs_quantile", y="imc")
 
-    fig.figure.savefig("prs_q20_plot.png")
+    fig.figure.savefig("prs_plots/prs_q20_plot.png")
+
+def prs_distribution(prs_df):
+    fig = sns.kdeplot(data=prs_df["prs"])
+
+    fig.figure.savefig("prs_plots/prs_distribution.png")
+
+def prevalence_per_quantile(prs_df):
+    prev_df = prs_df.groupby(["prs_quantile", "imc_cat"]).size() / prs_df.groupby(["prs_quantile"]).size()
+
+    fig = plt.subplots(figsize=(10, 5))
+
+    ax = sns.lineplot(prev_df.loc[:, "Obesidade"], marker=".", markersize=15, color="black")
+
+    ax.figure.savefig("prs_plots/prevalence_per_quantile.png")
+
+
 
 #Gráficos que faltam
-# Prevalência por quantil
 # Ancestralidade (barplot)
-# Distribuição PRS (density plot)
 # Correlação entre ancestralidade e PRS
 # Variância explicada
 prs_df = pd.read_csv(dataframe)
